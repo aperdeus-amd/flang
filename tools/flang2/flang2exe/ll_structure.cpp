@@ -382,6 +382,35 @@ ll_reset_module_types(LLVMModuleRef module)
   hashmap_clear(module->user_structs_byid);
 }
 
+static void
+ll_set_debug_info_version(LLVMModuleRef module, enum LL_IRVersion vers)
+{
+
+  if(!strcmp(module->target_triple, "amdgcn-amd-amdhsa") ) {
+    /*
+     * For target the Debug Info Version has to be set to 4 to be
+     * compliant with Heterogeneous Debugging extension
+     */
+    module->ir.debug_info_version = LL_Debug_Info_Version_4;
+  } else if (ll_feature_versioned_dw_tag(&module->ir)) {
+    /* LLVMDebugVersion 12 was used by LLVM versions 3.1 through 3.5, and we
+     * don't support LLVM versions older than 3.1, so the version as always 12.
+     */
+    module->ir.debug_info_version = LL_Debug_Info_Version_12;
+  } else {
+    /* LLVM 3.6 onwards encodes the debug info version in a module flag
+     * metadata node, and the numbering sequence started over.
+     *
+     * LLVM 3.6 used v2 which had the stringified header fields in metadata
+     * nodes. This format was abandoned in 3.7, and we don't support it.
+     */
+    if (vers >= LL_Version_3_7) {
+      module->ir.debug_info_version = LL_Debug_Info_Version_3;
+    } else {
+      module->ir.debug_info_version = LL_Debug_Info_Version_1;
+    }
+  }
+}
 /**
    \brief Compute the set of IR features in module when generating IR for the
    specified LLVM version.
@@ -408,23 +437,8 @@ compute_ir_feature_vector(LLVMModuleRef module, enum LL_IRVersion vers)
     module->ir.dwarf_version = LL_DWARF_Version_4;
   }
 
-  if (ll_feature_versioned_dw_tag(&module->ir)) {
-    /* LLVMDebugVersion 12 was used by LLVM versions 3.1 through 3.5, and we
-     * don't support LLVM versions older than 3.1, so the version as always 12.
-     */
-    module->ir.debug_info_version = 12;
-  } else {
-    /* LLVM 3.6 onwards encodes the debug info version in a module flag
-     * metadata node, and the numbering sequence started over.
-     *
-     * LLVM 3.6 used v2 which had the stringified header fields in metadata
-     * nodes. This format was abandoned in 3.7, and we don't support it.
-     */
-    if (vers >= LL_Version_3_7)
-      module->ir.debug_info_version = 3;
-    else
-      module->ir.debug_info_version = 1;
-  }
+  ll_set_debug_info_version(module, vers);
+
 }
 
 /**

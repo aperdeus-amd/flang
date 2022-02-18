@@ -1711,7 +1711,7 @@ lldbg_init(LL_Module *module)
 
   if (!ll_feature_debug_info_pre34(&db->module->ir)) {
     const int mdVers = ll_feature_versioned_dw_tag(&module->ir)
-                           ? 1
+                           ? LL_Debug_Info_Version_1
                            : module->ir.debug_info_version;
     const unsigned dwarfVers = ll_feature_dwarf_version(&module->ir);
     if (!module->named_mdnodes[MD_llvm_module_flags]) {

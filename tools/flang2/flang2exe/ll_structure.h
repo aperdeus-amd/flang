@@ -174,6 +174,13 @@ typedef enum LL_DWARFVersion {
   LL_DWARF_Version_5
 } LL_DWARFVersion;
 
+enum LL_DebugInfoVersion {
+  LL_Debug_Info_Version_1 = 1,
+  LL_Debug_Info_Version_3 = 3,
+  LL_Debug_Info_Version_4 = 4,
+  LL_Debug_Info_Version_12  = 12,
+};
+
 /* If flang is built with LLVM from github:flang-compiler/llvm, then one can
    define the cmake macro FLANG_LLVM_EXTENSIONS to use the Fortran debug
    information extensions added to that LLVM. For example, use the command:
@@ -194,7 +201,7 @@ typedef struct LL_IRFeatures_ {
   unsigned is_spir : 1;              /**< Targeting SPIR for OpenCL. */
   /** Version number for debug info metadata. Note that the version number
       sequences are different with/without versioned_dw_tag. */
-  unsigned debug_info_version : 8;
+  LL_DebugInfoVersion debug_info_version : 8;
 } LL_IRFeatures;
 
 #if HAVE_INLINE
