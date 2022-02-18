@@ -427,26 +427,6 @@ compute_ir_feature_vector(LLVMModuleRef module, enum LL_IRVersion vers)
   }
 }
 
-/**
-   \brief Convert the cached DWARF version to an unsigned
-
-   The DWARF version is either the default or specified from the command-line.
- */
-unsigned
-ll_feature_dwarf_version(const LL_IRFeatures *feature)
-{
-  switch (feature->dwarf_version) {
-  case LL_DWARF_Version_2:
-    return 2;
-  case LL_DWARF_Version_3:
-    return 3;
-  case LL_DWARF_Version_4:
-    return 4;
-  case LL_DWARF_Version_5:
-    return 5;
-  }
-}
-
 struct triple_info {
   const char *prefix;
   const char *datalayout;

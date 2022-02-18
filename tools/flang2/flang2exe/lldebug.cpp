@@ -1713,7 +1713,7 @@ lldbg_init(LL_Module *module)
     const int mdVers = ll_feature_versioned_dw_tag(&module->ir)
                            ? 1
                            : module->ir.debug_info_version;
-    const unsigned dwarfVers = ll_feature_dwarf_version(&module->ir);
+    const unsigned dwarfVers = module->ir.dwarf_version;
     if (!module->named_mdnodes[MD_llvm_module_flags]) {
       ll_extend_named_md_node(
           module, MD_llvm_module_flags,
@@ -1849,7 +1849,7 @@ lldbg_emit_compile_unit(LL_DebugInfo *db)
   assert(db, "Debug info not enabled", 0, ERR_Fatal);
   if (LL_MDREF_IS_NULL(db->comp_unit_mdnode)) {
     // AOCC begin
-    const unsigned dwarfVers = ll_feature_dwarf_version(&db->module->ir);
+    const unsigned dwarfVers = db->module->ir.dwarf_version;
     switch (flg.std) {
     case F77:
       lang_tag = DW_LANG_Fortran77;

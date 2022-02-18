@@ -168,10 +168,10 @@ typedef enum LL_IRVersion {
 LL_IRVersion get_llvm_version(void);
 
 typedef enum LL_DWARFVersion {
-  LL_DWARF_Version_2,
-  LL_DWARF_Version_3,
-  LL_DWARF_Version_4,
-  LL_DWARF_Version_5
+  LL_DWARF_Version_2 = 2,
+  LL_DWARF_Version_3 = 3,
+  LL_DWARF_Version_4 = 4,
+  LL_DWARF_Version_5 = 5
 } LL_DWARFVersion;
 
 /* If flang is built with LLVM from github:flang-compiler/llvm, then one can
@@ -541,8 +541,6 @@ ll_feature_no_file_in_namespace(const LL_IRFeatures *feature)
 #define ll_feature_no_file_in_namespace(f) ((f)->version >= LL_Version_5_0)
 
 #endif
-
-unsigned ll_feature_dwarf_version(const LL_IRFeatures *feature);
 
 struct LL_Module;
 struct LL_Object;
@@ -1390,11 +1388,6 @@ LL_Function *ll_create_function(LLVMModuleRef module, const char *name,
                                 int launch_bounds, int launch_bounds_minctasm,
                                 const char *calling_convention,
                                 enum LL_LinkageType linkage);
-
-/**
-   \brief ...
- */
-unsigned ll_feature_dwarf_version(const LL_IRFeatures *feature);
 
 /**
    \brief ...
