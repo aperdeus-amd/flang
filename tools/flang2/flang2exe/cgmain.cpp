@@ -5164,6 +5164,10 @@ void insert_llvm_dbg_declare(LL_MDRef mdnode, SPTR sptr, LL_Type *llTy,
   static bool dbg_declare_defined = false;
   char *gname;
   INSTR_LIST *Curr_Instr;
+  LLVMModuleRef mod = current_module;
+
+  if (mod->ir.debug_info_version == LL_Debug_Info_Version_4)
+    return;
 
   Curr_Instr = make_instr(I_CALL);
   Curr_Instr->flags |= CALL_INTRINSIC_FLAG;
@@ -5889,6 +5893,9 @@ void insert_llvm_dbg_value(OPERAND *load, LL_MDRef mdnode, SPTR sptr,
   LLVMModuleRef mod = current_module;
   LL_DebugInfo *di = mod->debug_info;
   INSTR_LIST *callInsn = make_instr(I_CALL);
+
+  if (mod->ir.debug_info_version == LL_Debug_Info_Version_4)
+    return;
 
   if (!defined) {
     EXFUNC_LIST *exfunc;
